@@ -1,0 +1,35 @@
+
+from collections import Counter
+
+
+def solve_word_puzzle(jumbled_word, dictionary):
+    result = []
+
+    target = Counter(jumbled_word.lower())
+
+    for word in dictionary:
+        if Counter(word.lower()) == target:
+            result.append(word)
+
+    return result
+
+
+# List of possible words
+dictionary = [
+    "python",
+    "typhon",
+    "matrix",
+    "science",
+    "college",
+    "java"
+]
+
+word = "nothyp"
+
+answer = solve_word_puzzle(word, dictionary)
+
+print("Jumbled Word :", word)
+print("Possible Words:")
+
+for item in answer:
+    print(item)
