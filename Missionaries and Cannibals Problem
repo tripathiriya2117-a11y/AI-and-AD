@@ -1,0 +1,63 @@
+
+from collections import deque
+
+
+# Check whether a state is safe
+def valid(m, c):
+    if m < 0 or c < 0 or m > 3 or c > 3:
+        return False
+
+    # Missionaries on the left bank must not be outnumbered
+    if m > 0 and c > m:
+        return False
+
+    # Missionaries on the right bank must not be outnumbered
+    if (3 - m) > 0 and (3 - c) > (3 - m):
+        return False
+
+    return True
+
+
+def solve():
+    # State: (missionaries_left, cannibals_left, boat_position)
+    # Boat position: 1 = left bank, 0 = right bank
+    start = (3, 3, 1)
+    goal = (0, 0, 0)
+
+    queue = deque([(start, [])])
+    visited = {start}
+
+    # Possible passengers: (missionaries, cannibals)
+    moves = [(1, 0), (2, 0), (0, 1), (0, 2), (1, 1)]
+
+    while queue:
+        state, path = queue.popleft()
+
+        if state == goal:
+            return path + [state]
+
+        m, c, boat = state
+
+        for dm, dc in moves:
+            if boat == 1:
+                nxt = (m - dm, c - dc, 0)
+            else:
+                nxt = (m + dm, c + dc, 1)
+
+            if valid(nxt[0], nxt[1]) and nxt not in visited:
+                visited.add(nxt)
+                queue.append((nxt, path + [state]))
+
+    return None
+
+
+# Main program
+solution = solve()
+
+if solution:
+    print("Solution:")
+    for s in solution:
+        side = "Left" if s[2] else "Right"
+        print(f"M={s[0]} C={s[1]} Boat={side}")
+else:
+    print("No solution found.")
