@@ -1,0 +1,62 @@
+
+import heapq
+
+# Graph represented as an adjacency list
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+# Heuristic values for each node
+heuristic = {
+    'A': 6,
+    'B': 4,
+    'C': 2,
+    'D': 5,
+    'E': 1,
+    'F': 0
+}
+
+
+def greedy_best_first_search(start, goal):
+    visited = set()
+    pq = []
+
+    # Store heuristic, node, and path
+    heapq.heappush(pq, (heuristic[start], start, [start]))
+
+    while pq:
+        h, node, path = heapq.heappop(pq)
+
+        if node == goal:
+            return path
+
+        if node not in visited:
+            visited.add(node)
+
+            for neighbour in graph[node]:
+                if neighbour not in visited:
+                    heapq.heappush(
+                        pq,
+                        (
+                            heuristic[neighbour],
+                            neighbour,
+                            path + [neighbour]
+                        )
+                    )
+
+    return None
+
+
+# Main program
+solution = greedy_best_first_search('A', 'F')
+
+if solution:
+    print("Path Found:")
+    print(" -> ".join(solution))
+else:
+    print("No path found.")
